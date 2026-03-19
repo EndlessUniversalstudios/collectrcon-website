@@ -3,7 +3,30 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>CollectrCon</title>
+  <title>CollectrCon — Cards, Toys &amp; Collectibles Convention | Columbia, SC</title>
+  <meta name="description" content="CollectrCon is Columbia, SC's premier trading card, toy, and collectibles convention. August 15–16, 2026. Buy tickets, reserve a vendor table, and connect with collectors." />
+  <meta name="keywords" content="CollectrCon, trading cards, collectibles, convention, Columbia SC, vendor tables, Pokemon cards, sports cards, toys" />
+  <meta name="robots" content="index, follow" />
+  <link rel="canonical" href="https://collectrcon.com" />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://collectrcon.com" />
+  <meta property="og:title" content="CollectrCon — Cards, Toys &amp; Collectibles Convention" />
+  <meta property="og:description" content="Columbia, SC's premier collectibles convention. August 15–16, 2026. Tickets from $10. Vendor tables available." />
+  <meta property="og:image" content="https://collectrcon.com/preview.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="CollectrCon — Cards, Toys &amp; Collectibles Convention" />
+  <meta name="twitter:description" content="Columbia, SC's premier collectibles convention. August 15–16, 2026." />
+  <meta name="twitter:image" content="https://collectrcon.com/preview.png" />
+  <!-- Google Analytics placeholder -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=GA_MEASUREMENT_ID"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'GA_MEASUREMENT_ID');
+  </script>
   <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
   <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
   <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
@@ -362,6 +385,8 @@ const globalCss = `
     .venue-inner{border:none;} .venue-map-placeholder,.venue-info{border:1px solid var(--border-gold);}
     .venue-info{padding:36px 24px;}
   }
+  .cc-contact-form-title{font-family:'Barlow Condensed',sans-serif;font-size:1.4rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--silver-light);margin-bottom:16px;}
+  .cc-contact-submitted{background:rgba(201,168,76,0.1);border:1px solid var(--border-gold);padding:32px;text-align:center;color:var(--gold);font-family:'Barlow Condensed',sans-serif;font-size:1.1rem;font-weight:600;letter-spacing:0.08em;}
 `;
 
 const vendors = [
@@ -836,16 +861,7 @@ function HomePage({onNavigate}) {
             </div>
           </Reveal>
           <Reveal dir="right" delay={1}>
-            <div className="cc-contact-channels">
-              <a href="mailto:collectrconexpo@gmail.com" className="cc-contact-card">
-                <div className="cc-contact-card-icon"><MailIcon size={22}/></div>
-                <div><div className="cc-contact-card-label">Email Us</div><div className="cc-contact-card-value">collectrconexpo@gmail.com</div><div className="cc-contact-card-sub">General inquiries, sponsorships &amp; questions</div></div>
-              </a>
-              <a href="https://www.instagram.com/collectrcon?igsh=MWh3NXI2M2xlNGdtYQ==" target="_blank" rel="noopener noreferrer" className="cc-contact-card">
-                <div className="cc-contact-card-icon"><IgIcon/></div>
-                <div><div className="cc-contact-card-label">Instagram</div><div className="cc-contact-card-value">@collectrcon</div><div className="cc-contact-card-sub">DMs open · Event updates &amp; giveaways</div></div>
-              </a>
-            </div>
+            <ContactForm/>
           </Reveal>
         </div>
       </section>
@@ -865,6 +881,46 @@ function HomePage({onNavigate}) {
         <span className="cc-footer-copy">© 2026 CollectR Con · Cards · Toys · Collectibles</span>
       </footer>
     </>
+  );
+}
+
+function ContactForm() {
+  const [form, setForm] = useState({name:"",email:"",message:""});
+  const [submitted, setSubmitted] = useState(false);
+  const [sending, setSending] = useState(false);
+  const handleInput = (e) => setForm(p=>({...p,[e.target.name]:e.target.value}));
+  const handleSubmit = async () => {
+    if(!form.name||!form.email||!form.message) return;
+    setSending(true);
+    await emailjs.send('service_xx6f2ub','template_3tzxesk',{
+      name:form.name,email:form.email,phone:'N/A',
+      type:'General Inquiry',
+      details:form.message,
+      payment:'N/A',
+      total:'N/A'
+    });
+    setSending(false);
+    setSubmitted(true);
+  };
+  if(submitted) return (
+    <div className="cc-contact-submitted">
+      Message received! We'll get back to you within 24–48 hours.
+    </div>
+  );
+  return (
+    <div>
+      <div className="cc-contact-form-title">Send Us a Message</div>
+      <div className="cc-form" style={{display:"flex",flexDirection:"column",gap:"14px"}}>
+        <div className="cc-form-row">
+          <div className="cc-form-group"><label className="cc-form-label">Name *</label><input className="cc-form-input" name="name" placeholder="Your name" value={form.name} onChange={handleInput}/></div>
+          <div className="cc-form-group"><label className="cc-form-label">Email *</label><input className="cc-form-input" name="email" type="email" placeholder="you@email.com" value={form.email} onChange={handleInput}/></div>
+        </div>
+        <div className="cc-form-group"><label className="cc-form-label">Message *</label><textarea className="cc-form-input cc-form-textarea" name="message" placeholder="What's on your mind? Sponsorship, vendor questions, general inquiries..." value={form.message} onChange={handleInput} rows={5} style={{resize:"vertical"}}/></div>
+        <button className="cc-btn-gold" style={{clipPath:"none",padding:"16px",opacity:(form.name&&form.email&&form.message)?1:0.5,cursor:(form.name&&form.email&&form.message)?"pointer":"not-allowed"}} onClick={handleSubmit} disabled={sending}>
+          {sending ? "Sending..." : "Send Message"}
+        </button>
+      </div>
+    </div>
   );
 }
 
