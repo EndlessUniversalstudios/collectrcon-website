@@ -650,6 +650,46 @@ function HomePage({onNavigate}) {
 
       <div className="cc-divider"/>
 
+      {/* VENUE REVEAL */}
+      <section className="cc-section venue-section" id="venue">
+        <Reveal>
+          <p className="cc-section-label">Venue</p>
+          <h2 className="cc-section-title">Location &amp; Details</h2>
+        </Reveal>
+        <Reveal delay={1}>
+          <div className="venue-inner" style={{marginTop:40}}>
+            <div className="venue-map-placeholder">
+              <div className="venue-map-grid"/>
+              <div className="venue-map-pin">📍</div>
+              <div className="venue-map-title">Venue Dropping Soon</div>
+              <p className="venue-map-sub">We're locking in the perfect spot.<br/>Follow @collectrcon for the reveal.</p>
+            </div>
+            <div className="venue-info">
+              <div className="venue-tba-badge">📍 Location TBA</div>
+              <p style={{fontSize:"0.9rem",color:"var(--muted)",lineHeight:1.7,marginBottom:24}}>The venue for CollectR Con 2026 will be announced on Instagram before anywhere else. Make sure you're following so you don't miss it.</p>
+              <div className="venue-details">
+                {[
+                  {icon:"📅",label:"Event Dates",value:"August 15–16, 2026"},
+                  {icon:"⏰",label:"Hours",value:"TBA — check @collectrcon for updates"},
+                  {icon:"🚗",label:"Parking",value:"Details announced with venue"},
+                  {icon:"♿",label:"Accessibility",value:"Fully accessible venue — details TBA"},
+                ].map(d=>(
+                  <div className="venue-detail-row" key={d.label}>
+                    <div className="venue-detail-icon">{d.icon}</div>
+                    <div><div className="venue-detail-label">{d.label}</div><div className="venue-detail-value">{d.value}</div></div>
+                  </div>
+                ))}
+              </div>
+              <a href="https://www.instagram.com/collectrcon?igsh=MWh3NXI2M2xlNGdtYQ==" target="_blank" rel="noopener noreferrer" style={{display:"inline-flex",alignItems:"center",gap:8,marginTop:28,textDecoration:"none",fontFamily:"'Barlow Condensed',sans-serif",fontSize:"0.8rem",fontWeight:700,letterSpacing:"0.14em",textTransform:"uppercase",color:"var(--gold)"}}>
+                <IgIcon/> Follow @collectrcon for the reveal →
+              </a>
+            </div>
+          </div>
+        </Reveal>
+      </section>
+
+      <div className="cc-divider"/>
+
       {/* VENDOR SPOTLIGHT */}
       <section className="cc-section spotlight-bg" id="vendors-spotlight">
         <Reveal>
@@ -706,46 +746,6 @@ function HomePage({onNavigate}) {
             </Reveal>
           ))}
         </div>
-      </section>
-
-      <div className="cc-divider"/>
-
-      {/* VENUE REVEAL */}
-      <section className="cc-section venue-section" id="venue">
-        <Reveal>
-          <p className="cc-section-label">Venue</p>
-          <h2 className="cc-section-title">Location &amp; Details</h2>
-        </Reveal>
-        <Reveal delay={1}>
-          <div className="venue-inner" style={{marginTop:40}}>
-            <div className="venue-map-placeholder">
-              <div className="venue-map-grid"/>
-              <div className="venue-map-pin">📍</div>
-              <div className="venue-map-title">Venue Dropping Soon</div>
-              <p className="venue-map-sub">We're locking in the perfect spot.<br/>Follow @collectrcon for the reveal.</p>
-            </div>
-            <div className="venue-info">
-              <div className="venue-tba-badge">📍 Location TBA</div>
-              <p style={{fontSize:"0.9rem",color:"var(--muted)",lineHeight:1.7,marginBottom:24}}>The venue for CollectR Con 2026 will be announced on Instagram before anywhere else. Make sure you're following so you don't miss it.</p>
-              <div className="venue-details">
-                {[
-                  {icon:"📅",label:"Event Dates",value:"August 15–16, 2026"},
-                  {icon:"⏰",label:"Hours",value:"TBA — check @collectrcon for updates"},
-                  {icon:"🚗",label:"Parking",value:"Details announced with venue"},
-                  {icon:"♿",label:"Accessibility",value:"Fully accessible venue — details TBA"},
-                ].map(d=>(
-                  <div className="venue-detail-row" key={d.label}>
-                    <div className="venue-detail-icon">{d.icon}</div>
-                    <div><div className="venue-detail-label">{d.label}</div><div className="venue-detail-value">{d.value}</div></div>
-                  </div>
-                ))}
-              </div>
-              <a href="https://www.instagram.com/collectrcon?igsh=MWh3NXI2M2xlNGdtYQ==" target="_blank" rel="noopener noreferrer" style={{display:"inline-flex",alignItems:"center",gap:8,marginTop:28,textDecoration:"none",fontFamily:"'Barlow Condensed',sans-serif",fontSize:"0.8rem",fontWeight:700,letterSpacing:"0.14em",textTransform:"uppercase",color:"var(--gold)"}}>
-                <IgIcon/> Follow @collectrcon for the reveal →
-              </a>
-            </div>
-          </div>
-        </Reveal>
       </section>
 
       <div className="cc-divider"/>
@@ -1129,6 +1129,32 @@ function ReservePage({onNavigate}) {
           </div>
         </div>
       </div>
+
+      {/* VENDOR GUIDELINES ON RESERVE PAGE */}
+      <section className="cc-section rules-section" style={{paddingTop:60,paddingBottom:60}}>
+        <Reveal>
+          <p className="cc-section-label">Vendor Guidelines</p>
+          <h2 className="cc-section-title">What Vendors<br/>Need to Know</h2>
+          <p className="cc-section-sub" style={{marginBottom:48}}>Read these before reserving your table. Questions? Email us or DM @collectrcon.</p>
+        </Reveal>
+        <div className="rules-grid">
+          {[
+            {title:"Authentic Items Only",desc:"All merchandise must be genuine. No bootlegs, fakes, or reproductions. Violations result in removal from the event with no refund."},
+            {title:"Setup & Breakdown",desc:"Early vendor access begins 1.5 hours before doors open. All tables must be fully set up before public admission. Breakdown begins 30 min after close."},
+            {title:"Table Space",desc:"Vendors may only use the space they have paid for. Overflow into neighboring vendor space or aisles is not permitted."},
+            {title:"Payment & Refunds",desc:"Table fees are non-refundable within 30 days of the event. Cancellations before that window receive credit toward a future event."},
+            {title:"Conduct",desc:"Professional behavior is expected. CollectR Con reserves the right to remove any vendor for disruptive or inappropriate conduct."},
+            {title:"Special Accommodations",desc:"Need electricity, extra space, or have accessibility requirements? Contact us at collectrconexpo@gmail.com before reserving."},
+          ].map((r,i)=>(
+            <Reveal key={r.title} delay={(i%2)+1}>
+              <div className="rules-card">
+                <div className="rules-card-num">{String(i+1).padStart(2,"0")}</div>
+                <div><div className="rules-card-title">{r.title}</div><div className="rules-card-desc">{r.desc}</div></div>
+              </div>
+            </Reveal>
+          ))}
+        </div>
+      </section>
 
       {/* CONTACT ON RESERVE PAGE */}
       <div className="rp-contact" id="rp-contact">
