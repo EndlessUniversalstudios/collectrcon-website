@@ -418,7 +418,7 @@ const vendors = [
 const faqs = [
   {q:"When and where is CollectR Con?",a:"CollectR Con takes place August 15–16, 2026. Doors open at 10 AM both days. Saturday closes at 6 PM, Sunday at 5 PM. Venue details will be announced on Instagram — follow @collectrcon so you don't miss it."},
   {q:"Is parking available?",a:"Parking details will be announced alongside the venue reveal. We'll make sure there are convenient options for attendees. Follow @collectrcon for updates."},
-  {q:"How do I reserve a vendor table?",a:"Click Reserve a Table, choose your package (Bronze, Silver, or Gold), select a payment method, and submit your info. We confirm within 48 hours."},
+  {q:"How do I reserve a vendor table?",a:"Click Reserve a Table, choose your package (Dealer at $160, Collector at $400, or Elite at $550), select a payment method, and submit your info. We confirm within 48 hours."},
   {q:"What does admission cost?",a:"General Admission is $10 per person. Early Bird tickets are $15 and include priority entry and an exclusive lanyard — limited availability. A VIP package is also coming soon. Kids 10 & under are free with a paying adult."},
   {q:"What is the refund and transfer policy?",a:"Tickets and vendor table reservations are non-refundable. However, they are fully transferable — if you can't make it, you may transfer to another person. Email collectrconexpo@gmail.com to arrange a transfer at least 72 hours before the event."},
   {q:"What can vendors sell?",a:"Trading cards, collectibles, toys, sneakers, jewelry, art, crystals, vintage items, and more. All items must be authentic."},
@@ -427,9 +427,9 @@ const faqs = [
 ];
 
 const tablePlans = [
-  {name:"Bronze Package",price:"$150",saleEnds:"May 1, 2026",includes:["1 table and 2 chairs for both days","2 vendor passes","Standard floor placement","Early setup access"],note:"Perfect for solo vendors and first-time participants."},
-  {name:"Silver Package",price:"$375",featured:true,saleEnds:"May 1, 2026",includes:["3 tables and up to 6 chairs for both days","6 vendor passes","Enhanced floor placement","Early setup access","This package saves $25 per table"],note:"Most popular — ideal for established vendors with large inventory."},
-  {name:"Gold Package",price:"$500",saleEnds:"May 3, 2026",includes:["5 tables with up to 10 chairs for both days","10 vendor passes","Prime table placement by entrance","Your logo featured on our social media pages","Eligible to request electricity and wall space","Eligible to request early setup","This package saves $50 per table"],note:"Maximum exposure and space for serious vendors."},
+  {name:"Dealer Package",price:"$160",saleEnds:"May 1, 2026",includes:["1 table and 2 chairs for both days","2 vendor passes","Standard floor placement","Early setup access"],note:"Perfect for solo vendors and first-time participants."},
+  {name:"Collector Package",price:"$400",featured:true,saleEnds:"May 1, 2026",includes:["3 tables and up to 6 chairs for both days","6 vendor passes","Enhanced floor placement","Early setup access","Saves $80 vs buying 3 tables individually"],note:"Most popular — ideal for established vendors with large inventory."},
+  {name:"Elite Package",price:"$550",saleEnds:"May 3, 2026",includes:["5 tables with up to 10 chairs for both days","10 vendor passes","Prime table placement by entrance","Your logo featured on our social media pages","Eligible to request electricity and wall space","Eligible to request early setup","Saves $250 vs buying 5 tables individually"],note:"Maximum exposure and space for serious vendors."},
 ];
 
 const payMethods = [
@@ -969,7 +969,7 @@ function ReservePage({onNavigate}) {
   const [selTable, setSelTable] = useState(null);
   const [selPayment, setSelPayment] = useState(null);
   const [showSpecial, setShowSpecial] = useState(false);
-  const [form, setForm] = useState({name:"",email:"",phone:"",business:"",category:"",notes:""});
+  const [form, setForm] = useState({name:"",email:"",phone:"",business:"",category:"",notes:"",referredBy:""});
   const [submitted, setSubmitted] = useState(false);
   const [submitError, setSubmitError] = useState(null);
   const handleInput = (e) => setForm(p=>({...p,[e.target.name]:e.target.value}));
@@ -979,7 +979,7 @@ function ReservePage({onNavigate}) {
     const amount = plan ? parseInt(plan.price.replace(/\D/g,'')) : 0;
     const {error} = await db.from('vendor_reservations').insert({
       name:form.name,email:form.email,phone:form.phone,
-      business:form.business,category:form.category,notes:form.notes,
+      business:form.business,category:form.category,notes:form.notes,referred_by:form.referredBy,
       table_plan:selTable,payment_method:selPayment,total_amount:amount
     });
     if(error){setSubmitError('Something went wrong. Please try again.');}
@@ -1141,6 +1141,10 @@ function ReservePage({onNavigate}) {
                   {showSpecial&&(
                     <div style={{marginTop:8}}>
                       <textarea className="cc-form-textarea" name="notes" placeholder="Electricity access, corner preference, extra space needs, accessibility requirements, questions..." value={form.notes} onChange={handleInput} style={{height:110}}/>
+                <div className="cc-form-group" style={{marginTop:16}}>
+                  <label className="cc-form-label">Referred By <span style={{color:"var(--gold)",fontSize:"0.78rem",fontWeight:400}}>(optional — enter vendor name for $10 referral discount)</span></label>
+                  <input className="cc-form-input" name="referredBy" placeholder="Name of the vendor who referred you" value={form.referredBy} onChange={handleInput}/>
+                </div>
                       <p style={{fontSize:"0.73rem",color:"var(--muted)",marginTop:6,paddingLeft:4}}>We'll do our best to accommodate. Special requests are not guaranteed but we always try.</p>
                     </div>
                   )}
