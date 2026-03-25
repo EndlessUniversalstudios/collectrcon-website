@@ -991,6 +991,12 @@ function ReservePage({onNavigate}) {
         payment:selPayment,
         total:amount
       });
+      await emailjs.send('service_xx6f2ub','template_1w6rota',{
+        name:form.name,email:form.email,phone:form.phone||'N/A',
+        details:selTable+(form.business?' — '+form.business:''),
+        payment:selPayment,
+        total:'$'+amount
+      });
       setSubmitted(true);
     }
   };
