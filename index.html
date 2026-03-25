@@ -418,7 +418,7 @@ const vendors = [
 const faqs = [
   {q:"When and where is CollectR Con?",a:"CollectR Con takes place August 15–16, 2026. Doors open at 10 AM both days. Saturday closes at 6 PM, Sunday at 5 PM. Venue details will be announced on Instagram — follow @collectrcon so you don't miss it."},
   {q:"Is parking available?",a:"Parking details will be announced alongside the venue reveal. We'll make sure there are convenient options for attendees. Follow @collectrcon for updates."},
-  {q:"How do I reserve a vendor table?",a:"Click Reserve a Table, choose your setup, select a payment method, and submit. We confirm within 48 hours."},
+  {q:"How do I reserve a vendor table?",a:"Click Reserve a Table, choose your package (Bronze, Silver, or Gold), select a payment method, and submit your info. We confirm within 48 hours."},
   {q:"What does admission cost?",a:"General Admission is $10 per person. Early Bird tickets are $15 and include priority entry and an exclusive lanyard — limited availability. A VIP package is also coming soon. Kids 10 & under are free with a paying adult."},
   {q:"What is the refund and transfer policy?",a:"Tickets and vendor table reservations are non-refundable. However, they are fully transferable — if you can't make it, you may transfer to another person. Email collectrconexpo@gmail.com to arrange a transfer at least 72 hours before the event."},
   {q:"What can vendors sell?",a:"Trading cards, collectibles, toys, sneakers, jewelry, art, crystals, vintage items, and more. All items must be authentic."},
@@ -427,9 +427,9 @@ const faqs = [
 ];
 
 const tablePlans = [
-  {name:"1 Table",price:"$150",includes:["1 standard 6ft table","2 chairs","Standard floor placement","Vendor badge (2 included)","Early setup access"],note:"Best for solo vendors or first-time participants."},
-  {name:"2 Tables",price:"$250",featured:true,includes:["Two 6ft tables (12ft total)","4 chairs","Enhanced floor placement","Vendor badges (4 included)","Early setup access","Instagram feature on @collectrcon"],note:"Most popular — ideal for established vendors with large inventory."},
-  {name:"3 Tables",price:"$300",includes:["Three 6ft tables (18ft total)","6 chairs","Premium floor placement","Maximum foot traffic exposure","Vendor badges (6 included)","Early setup access","Featured in event promo posts"],note:"Best value — maximum space for serious vendors."},
+  {name:"Bronze Package",price:"$150",saleEnds:"May 1, 2026",includes:["1 table and 2 chairs for both days","2 vendor passes","Standard floor placement","Early setup access"],note:"Perfect for solo vendors and first-time participants."},
+  {name:"Silver Package",price:"$375",featured:true,saleEnds:"May 1, 2026",includes:["3 tables and up to 6 chairs for both days","6 vendor passes","Enhanced floor placement","Early setup access","This package saves $25 per table"],note:"Most popular — ideal for established vendors with large inventory."},
+  {name:"Gold Package",price:"$500",saleEnds:"May 3, 2026",includes:["5 tables with up to 10 chairs for both days","10 vendor passes","Prime table placement by entrance","Your logo featured on our social media pages","Eligible to request electricity and wall space","Eligible to request early setup","This package saves $50 per table"],note:"Maximum exposure and space for serious vendors."},
 ];
 
 const payMethods = [
@@ -1021,6 +1021,7 @@ function ReservePage({onNavigate}) {
               {t.featured&&<div className="rp-featured-badge">Most Popular</div>}
               {selTable===t.name&&<div style={{position:"absolute",top:12,right:16,color:"var(--gold)",fontFamily:"'Barlow Condensed',sans-serif",fontSize:"0.75rem",fontWeight:700,letterSpacing:"0.12em"}}>✓ SELECTED</div>}
               <div className="rp-table-name">{t.name}</div>
+              {t.saleEnds && <div style={{fontSize:"0.75rem",color:"var(--muted)",marginBottom:10,marginTop:-10}}>Sale ends on {t.saleEnds}</div>}
               <div className="rp-table-price">{t.price}</div>
               <div className="rp-table-price-note">One-time flat rate · No hidden fees</div>
               <ul className="rp-table-includes">{t.includes.map(i=><li key={i}>{i}</li>)}</ul>
@@ -1274,6 +1275,7 @@ function TicketsPage({onNavigate}) {
               {t.featured&&<div className="rp-featured-badge">Most Popular</div>}
               {selTier===t.name&&<div style={{position:"absolute",top:12,right:16,color:"var(--gold)",fontFamily:"'Barlow Condensed',sans-serif",fontSize:"0.75rem",fontWeight:700,letterSpacing:"0.12em"}}>✓ SELECTED</div>}
               <div className="rp-table-name">{t.name}</div>
+              {t.saleEnds && <div style={{fontSize:"0.75rem",color:"var(--muted)",marginBottom:10,marginTop:-10}}>Sale ends on {t.saleEnds}</div>}
               <div className="rp-table-price">{t.price}</div>
               <div className="rp-table-price-note">{t.vip?"Details coming soon":"Per person · Both days included"}</div>
               {t.vip ? (
