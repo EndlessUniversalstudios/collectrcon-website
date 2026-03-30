@@ -1432,7 +1432,7 @@ function FoodVendorsPage({onNavigate}) {
         type:'Food Vendor Application',
         details:form.foodType+' — '+form.location+' booth'+(form.electricity==='yes'?' + electricity':'')+(form.business?' — '+form.business:''),
         payment:'Application (pending approval)',
-        total:'Indoor $200 / Outdoor $175'+(form.electricity==='yes'?' + $30 electricity':'')
+        total:'Indoor $200 / Outdoor $175'+(form.electricity==='yes'?' + $40 electricity':'')
       });
       setSubmitted(true);
     } catch(e){ setSubmitError('Something went wrong. Please try again.'); }
@@ -1440,8 +1440,8 @@ function FoodVendorsPage({onNavigate}) {
   };
 
   const booths = [
-    {type:"Indoor Booth",price:"$200",spots:"2 spots available",includes:["Space inside the venue","Climate controlled","High foot traffic","Electricity available (+$30)"],note:"Limited — fills fast."},
-    {type:"Outdoor Booth",price:"$175",spots:"2 spots available",includes:["10×10 outdoor space","Bring your own tent & setup","More room to spread out","Electricity available (+$30)"],note:"Bring a canopy — August in ABQ is hot."},
+    {type:"Indoor Booth",price:"$200",spots:"2 spots available",includes:["Space inside the venue","Climate controlled","High foot traffic","Electricity available (+$40)"],note:"Limited — fills fast."},
+    {type:"Outdoor Booth",price:"$175",spots:"2 spots available",includes:["Outdoor space provided","Bring your own tent & setup","More room to spread out","Electricity available (+$40)"],note:"Bring a canopy — August in ABQ is hot."},
   ];
 
   return (
@@ -1535,10 +1535,10 @@ function FoodVendorsPage({onNavigate}) {
                   </select>
                 </div>
                 <div className="cc-form-group">
-                  <label className="cc-form-label">Do you need electricity? <span style={{color:"var(--gold)",fontSize:"0.78rem",fontWeight:400}}>(+$30)</span></label>
+                  <label className="cc-form-label">Do you need electricity? <span style={{color:"var(--gold)",fontSize:"0.78rem",fontWeight:400}}>(+$40)</span></label>
                   <select className="cc-form-select cc-form-input" name="electricity" value={form.electricity} onChange={handleInput}>
                     <option value="no">No</option>
-                    <option value="yes">Yes (+$30)</option>
+                    <option value="yes">Yes (+$40)</option>
                   </select>
                 </div>
                 <div className="cc-form-group">
@@ -1558,7 +1558,18 @@ function FoodVendorsPage({onNavigate}) {
                     <option value="No — will obtain before event">No — will obtain before event</option>
                   </select>
                 </div>
-                <div className="cc-form-group"><label className="cc-form-label">Anything else we should know?</label><textarea className="cc-form-textarea" name="notes" placeholder="Setup needs, questions, special requests..." value={form.notes} onChange={handleInput} style={{height:90}}/></div>
+                <div style={{marginTop:8}}>
+                  <button type="button" onClick={()=>setForm(p=>({...p,_showSpecial:!p._showSpecial}))} style={{width:"100%",background:"var(--black3)",border:"1px solid var(--border-gold)",color:"var(--silver-light)",padding:"14px 20px",fontFamily:"'Barlow Condensed',sans-serif",fontSize:"0.82rem",fontWeight:700,letterSpacing:"0.12em",textTransform:"uppercase",cursor:"pointer",display:"flex",justifyContent:"space-between",alignItems:"center"}}>
+                    Special Requests / Additional Notes
+                    <span style={{marginLeft:"auto",fontSize:"0.9rem"}}>{form._showSpecial?"−":"+"}</span>
+                  </button>
+                  {form._showSpecial&&(
+                    <div style={{marginTop:8}}>
+                      <textarea className="cc-form-textarea" name="notes" placeholder="Setup needs, electricity details, accessibility requirements, questions, anything else we should know..." value={form.notes} onChange={handleInput} style={{height:110}}/>
+                      <p style={{fontSize:"0.73rem",color:"var(--muted)",marginTop:6,paddingLeft:4}}>We'll do our best to accommodate. Special requests are not guaranteed but we always try.</p>
+                    </div>
+                  )}
+                </div>
                 <button className="cc-btn-gold" style={{width:"100%",clipPath:"none",padding:"16px",opacity:(form.name&&form.email&&form.foodType&&form.location)?1:0.5,cursor:(form.name&&form.email&&form.foodType&&form.location)?"pointer":"not-allowed"}} onClick={handleSubmit} disabled={sending}>{sending?"Submitting...":"Submit Application"}</button>
               </div>
             )}
