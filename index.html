@@ -445,12 +445,12 @@ const MailIcon = ({size=16}) => <svg width={size} height={size} viewBox="0 0 24 
 
 function NavBar({onNavigate, page}) {
   const [menuOpen, setMenuOpen] = useState(false);
-  const homeLinks = [["Events","#events"],["Vendors","vendors"],["Tickets","tickets"],["Reserve","reserve"],["FAQ","#faq"],["Contact","#contact"]];
-  const subLinks  = [["← Back Home","home"],["Vendors","vendors"],["Tickets","tickets"],["Reserve Table","reserve"]];
+  const homeLinks = [["Events","#events"],["Vendors","vendors"],["Food Vendors","food"],["Tickets","tickets"],["Reserve","reserve"],["FAQ","#faq"],["Contact","#contact"]];
+  const subLinks  = [["← Back Home","home"],["Vendors","vendors"],["Food Vendors","food"],["Tickets","tickets"],["Reserve Table","reserve"]];
   const links = page==="home" ? homeLinks : subLinks;
   const handleNav = (t) => {
     setMenuOpen(false);
-    if(t==="reserve"||t==="tickets"||t==="home"||t==="vendors") { onNavigate(t); }
+    if(t==="reserve"||t==="tickets"||t==="home"||t==="vendors"||t==="food") { onNavigate(t); }
     else if(t.startsWith("#")) { window.setTimeout(()=>document.querySelector(t)?.scrollIntoView({behavior:"smooth"}),50); }
     else { document.getElementById(t)?.scrollIntoView({behavior:"smooth"}); }
   };
@@ -1416,6 +1416,159 @@ function TicketsPage({onNavigate}) {
   );
 }
 
+
+function FoodVendorsPage({onNavigate}) {
+  const [form, setForm] = React.useState({name:"",business:"",email:"",phone:"",instagram:"",foodType:"",location:"",electricity:"no",permit:"",insurance:"",notes:""});
+  const [submitted, setSubmitted] = React.useState(false);
+  const [sending, setSending] = React.useState(false);
+  const [submitError, setSubmitError] = React.useState(null);
+  const handleInput = (e) => setForm(p=>({...p,[e.target.name]:e.target.value}));
+  const handleSubmit = async () => {
+    if(!form.name||!form.email||!form.foodType||!form.location) return;
+    setSending(true);
+    try {
+      await emailjs.send('service_xx6f2ub','template_3tzxesk',{
+        name:form.name,email:form.email,phone:form.phone||'N/A',
+        type:'Food Vendor Application',
+        details:form.foodType+' — '+form.location+' booth'+(form.electricity==='yes'?' + electricity':'')+(form.business?' — '+form.business:''),
+        payment:'Application (pending approval)',
+        total:'Indoor $200 / Outdoor $175'+(form.electricity==='yes'?' + $30 electricity':'')
+      });
+      setSubmitted(true);
+    } catch(e){ setSubmitError('Something went wrong. Please try again.'); }
+    setSending(false);
+  };
+
+  const booths = [
+    {type:"Indoor Booth",price:"$200",spots:"2 spots available",includes:["Space inside the venue","Climate controlled","High foot traffic","Electricity available (+$30)"],note:"Limited — fills fast."},
+    {type:"Outdoor Booth",price:"$175",spots:"2 spots available",includes:["10×10 outdoor space","Bring your own tent & setup","More room to spread out","Electricity available (+$30)"],note:"Bring a canopy — August in ABQ is hot."},
+  ];
+
+  return (
+    <div className="rp-page">
+      <NavBar onNavigate={onNavigate} page="food"/>
+      <div className="rp-hero">
+        <div className="rp-hero-inner">
+          <p className="rp-hero-label">Food Vendors</p>
+          <h1 className="rp-hero-title">Feed The<br/>Collectors</h1>
+          <p className="rp-hero-sub">Bring your food business to CollectrCon. Limited to 4 vendors total — 2 indoor, 2 outdoor. Applications are reviewed and approved to ensure variety.</p>
+        </div>
+      </div>
+
+      {/* Booth Options */}
+      <div className="rp-tables-section">
+        <p className="rp-tables-label">Booth Options</p>
+        <h2 className="rp-tables-title">Pick Your Spot</h2>
+        <p className="rp-tables-sub">All booths are for the full 2-day event (August 15–16, 2026). One-time flat rate — no percentage of sales.</p>
+        <div className="rp-table-cards">
+          {booths.map(b=>(
+            <div key={b.type} className="rp-table-card" style={{cursor:"default"}}>
+              <div className="rp-table-name">{b.type}</div>
+              <div className="rp-table-price">{b.price}</div>
+              <div className="rp-table-price-note">{b.spots} · Full 2-day event</div>
+              <ul className="rp-table-includes">{b.includes.map(i=><li key={i}>{i}</li>)}</ul>
+              <p className="rp-table-note">{b.note}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Requirements */}
+      <div style={{padding:"60px",background:"var(--black2)"}}>
+        <div style={{maxWidth:800,margin:"0 auto"}}>
+          <p className="rp-tables-label">Requirements</p>
+          <h2 className="rp-tables-title">Before You Apply</h2>
+          <p className="rp-tables-sub">All food vendors must meet these requirements before approval.</p>
+          <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(280px,1fr))",gap:16}}>
+            {[
+              {title:"NM Food Handler License",desc:"Valid New Mexico food handler certification required for all staff working the booth."},
+              {title:"Proof of Liability Insurance",desc:"Certificate of insurance naming CollectrCon LLC as additional insured."},
+              {title:"Health Permit",desc:"Valid food vendor health permit issued by the NM Environment Department."},
+              {title:"Bring Your Own Setup",desc:"Tent, tables, equipment, and supplies are your responsibility. We provide the space."},
+              {title:"No Alcohol",desc:"Sale or distribution of alcohol is not permitted at this event."},
+              {title:"No Direct Competitors",desc:"We limit one vendor per food category to ensure variety for attendees."},
+            ].map(r=>(
+              <div key={r.title} style={{background:"var(--black3)",padding:"24px",borderLeft:"3px solid var(--gold)"}}>
+                <p style={{fontFamily:"'Barlow Condensed',sans-serif",fontWeight:700,letterSpacing:"0.08em",textTransform:"uppercase",color:"var(--silver-light)",marginBottom:8,fontSize:"0.85rem"}}>{r.title}</p>
+                <p style={{color:"var(--muted)",fontSize:"0.85rem",lineHeight:1.6,margin:0}}>{r.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* Application Form */}
+      <div className="rp-form-section">
+        <div className="rp-form-grid">
+          <div>
+            <p className="rp-tables-label" style={{margin:0}}>Apply Now</p>
+            <h2 className="rp-tables-title">Food Vendor<br/>Application</h2>
+            <p style={{color:"var(--muted)",fontSize:"0.88rem",lineHeight:1.7,maxWidth:380}}>Fill out the form and we'll review your application within 72 hours. Spots are limited — apply early.</p>
+            <div style={{marginTop:32,padding:"20px 24px",background:"var(--black3)",borderLeft:"3px solid var(--gold)"}}>
+              <p style={{color:"var(--gold)",fontFamily:"'Barlow Condensed',sans-serif",fontWeight:700,letterSpacing:"0.1em",textTransform:"uppercase",fontSize:"0.8rem",marginBottom:8}}>Approval Process</p>
+              <p style={{color:"var(--muted)",fontSize:"0.82rem",lineHeight:1.6,margin:0}}>Applications are reviewed individually. We'll contact you within 72 hours. Payment is only collected after your application is approved.</p>
+            </div>
+          </div>
+          <div>
+            {submitted ? (
+              <div style={{textAlign:"center",padding:"60px 20px"}}>
+                <div style={{fontSize:"3rem",marginBottom:16}}>✦</div>
+                <h3 style={{fontFamily:"'Bebas Neue',sans-serif",fontSize:"2rem",color:"var(--gold)",letterSpacing:"0.06em",marginBottom:12}}>Application Received!</h3>
+                <p style={{color:"var(--muted)",lineHeight:1.7}}>We'll review your application and get back to you at <strong style={{color:"var(--silver-light)"}}>{form.email}</strong> within 72 hours.</p>
+              </div>
+            ) : (
+              <div style={{display:"flex",flexDirection:"column",gap:16}}>
+                {submitError && <p style={{color:"#e53935",fontSize:"0.85rem"}}>{submitError}</p>}
+                <div className="cc-form-group"><label className="cc-form-label">Full Name *</label><input className="cc-form-input" name="name" placeholder="Your name" value={form.name} onChange={handleInput}/></div>
+                <div className="cc-form-group"><label className="cc-form-label">Business Name</label><input className="cc-form-input" name="business" placeholder="Your food business name" value={form.business} onChange={handleInput}/></div>
+                <div className="cc-form-group"><label className="cc-form-label">Email *</label><input className="cc-form-input" name="email" type="email" placeholder="you@email.com" value={form.email} onChange={handleInput}/></div>
+                <div className="cc-form-group"><label className="cc-form-label">Phone</label><input className="cc-form-input" name="phone" placeholder="(505) 000-0000" value={form.phone} onChange={handleInput}/></div>
+                <div className="cc-form-group"><label className="cc-form-label">Instagram / Website</label><input className="cc-form-input" name="instagram" placeholder="@yourbusiness or website URL" value={form.instagram} onChange={handleInput}/></div>
+                <div className="cc-form-group"><label className="cc-form-label">What Do You Sell? *</label><input className="cc-form-input" name="foodType" placeholder="e.g. Tacos, Desserts, Drinks, BBQ..." value={form.foodType} onChange={handleInput}/></div>
+                <div className="cc-form-group">
+                  <label className="cc-form-label">Booth Preference *</label>
+                  <select className="cc-form-select cc-form-input" name="location" value={form.location} onChange={handleInput}>
+                    <option value="">Select booth type</option>
+                    <option value="Indoor ($200)">Indoor Booth — $200</option>
+                    <option value="Outdoor ($175)">Outdoor Booth — $175</option>
+                    <option value="No preference">No preference</option>
+                  </select>
+                </div>
+                <div className="cc-form-group">
+                  <label className="cc-form-label">Do you need electricity? <span style={{color:"var(--gold)",fontSize:"0.78rem",fontWeight:400}}>(+$30)</span></label>
+                  <select className="cc-form-select cc-form-input" name="electricity" value={form.electricity} onChange={handleInput}>
+                    <option value="no">No</option>
+                    <option value="yes">Yes (+$30)</option>
+                  </select>
+                </div>
+                <div className="cc-form-group">
+                  <label className="cc-form-label">Do you have a valid NM food handler license & health permit?</label>
+                  <select className="cc-form-select cc-form-input" name="permit" value={form.permit} onChange={handleInput}>
+                    <option value="">Select</option>
+                    <option value="Yes">Yes</option>
+                    <option value="No — will obtain before event">No — will obtain before event</option>
+                    <option value="In progress">In progress</option>
+                  </select>
+                </div>
+                <div className="cc-form-group">
+                  <label className="cc-form-label">Do you have liability insurance?</label>
+                  <select className="cc-form-select cc-form-input" name="insurance" value={form.insurance} onChange={handleInput}>
+                    <option value="">Select</option>
+                    <option value="Yes">Yes</option>
+                    <option value="No — will obtain before event">No — will obtain before event</option>
+                  </select>
+                </div>
+                <div className="cc-form-group"><label className="cc-form-label">Anything else we should know?</label><textarea className="cc-form-textarea" name="notes" placeholder="Setup needs, questions, special requests..." value={form.notes} onChange={handleInput} style={{height:90}}/></div>
+                <button className="cc-btn-gold" style={{width:"100%",clipPath:"none",padding:"16px",opacity:(form.name&&form.email&&form.foodType&&form.location)?1:0.5,cursor:(form.name&&form.email&&form.foodType&&form.location)?"pointer":"not-allowed"}} onClick={handleSubmit} disabled={sending}>{sending?"Submitting...":"Submit Application"}</button>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function CollectrCon() {
   const [page, setPage] = useState("home");
   const navigate = (p) => { setPage(p); window.scrollTo({top:0,behavior:"smooth"}); };
@@ -1423,7 +1576,7 @@ function CollectrCon() {
     <div className="cc-root">
       <style>{globalCss}</style>
       <NavBar onNavigate={navigate} page={page}/>
-      {page==="home"?<HomePage onNavigate={navigate}/>:page==="tickets"?<TicketsPage onNavigate={navigate}/>:page==="vendors"?<VendorsPage onNavigate={navigate}/>:<ReservePage onNavigate={navigate}/>}
+      {page==="home"?<HomePage onNavigate={navigate}/>:page==="tickets"?<TicketsPage onNavigate={navigate}/>:page==="vendors"?<VendorsPage onNavigate={navigate}/>:page==="food"?<FoodVendorsPage onNavigate={navigate}/>:<ReservePage onNavigate={navigate}/>}
     </div>
   );
 }
